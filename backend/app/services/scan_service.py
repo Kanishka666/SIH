@@ -16,6 +16,8 @@ from fastapi import HTTPException, UploadFile, status
 
 from app.core.config import settings
 from app.storage import memory_store
+from app.services.compliance_service import evaluate_ocr_text
+from app.services.ocr_service import scan_image
 
 MAX_UPLOAD_SIZE_BYTES = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
@@ -45,16 +47,6 @@ def create_scan_from_upload(owner_id: str, file: UploadFile) -> dict:
     contents = file.file.read()
     _validate_image(file, contents)
 
-    if not settings.OCR_API_URL:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="OCR service is not configured yet; scan processing is unavailable.",
-        )
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="OCR service URL is configured, but the OCR adapter is not integrated yet.",
-    )
-
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     extension = os.path.splitext(file.filename or "")[1] or ".jpg"
     unique_filename = f"{uuid.uuid4().hex}{extension}"
@@ -69,6 +61,17 @@ def create_scan_from_upload(owner_id: str, file: UploadFile) -> dict:
         file_path=file_path,
         content_type=file.content_type,
     )
+
+    ocr_data = scan_image(file_path, file.filename or unique_filename, file.content_type)
+    compliance = evaluate_ocr_text(str(ocr_data.get("raw_text") or ""))
+    structured = compliance.get("structured_data", {})
+    violations = []
+    for index, item in enumerate(compliance.get("rule_results", []), start=1):
+        if item.get("status") == "VIOLATION":
+            violations.append({"id": f"rule_{index}", "title": item.get("rule_id") or item.get("rule") or "Compliance rule", "rule_number": str(item.get("rule_id") or item.get("rule") or ""), "reason": item.get("message") or item.get("reason") or item.get("status", ""), "severity": item.get("severity", "medium").lower(), "recommendation": item.get("recommendation") or "Review this requirement."})
+    extracted = {"product_name": ocr_data.get("product_name") or structured.get("generic_name") or "", "mrp": ocr_data.get("mrp") or structured.get("mrp") or "", "manufacturer": ocr_data.get("manufacturer_name") or ocr_data.get("brand") or structured.get("manufacturer_name") or "", "net_quantity": ocr_data.get("net_quantity") or structured.get("net_quantity") or "", "expiry_date": ocr_data.get("use_by_date") or "", "consumer_care": ocr_data.get("consumer_care") or structured.get("consumer_care") or "", "batch_number": ocr_data.get("batch_number"), "manufacturing_date": ocr_data.get("packed_date") or structured.get("packing_date"), "country_of_origin": ocr_data.get("country_of_origin")}
+
+    memory_store.update_scan(scan["id"], status="completed", progress=100, result={"compliance_score": round(100 * sum(1 for item in compliance["rule_results"] if item.get("status") == "PASS") / max(1, sum(1 for item in compliance["rule_results"] if not item.get("needs_extra_module")))), "overall_status": compliance["overall_status"], "extracted_information": extracted, "violations": violations, "recommendations": [v["recommendation"] for v in violations], "ocr_data": ocr_data, "compliance": compliance, "rule_results": compliance["rule_results"]})
 
     return memory_store.get_scan(scan["id"])
 
@@ -101,6 +104,14 @@ def build_scan_detail_response(scan: dict) -> dict:
                 "extracted_information": scan["result"]["extracted_information"],
                 "violations": scan["result"]["violations"],
                 "recommendations": scan["result"]["recommendations"],
+                "rule_results": scan["result"].get("rule_results", []),
+                "raw_text": scan["result"].get("ocr_data", {}).get("raw_text", ""),
             }
         )
     return base
+
+
+
+
+
+

@@ -4,9 +4,9 @@ export interface BackendUser { id: string; name: string; email: string; role: st
 export interface AuthResponse { access_token: string; token_type: string; user: BackendUser; }
 export interface BackendScan {
   scan_id: string; status: string; progress?: number; compliance_score?: number;
-  overall_status?: string; extracted_information?: Record<string, string>;
+  overall_status?: string; raw_text?: string; extracted_information?: Record<string, string | null>;
   violations?: Array<{ id: string; title: string; rule_number: string; reason: string; severity: string; recommendation: string }>;
-  recommendations?: string[];
+  recommendations?: string[]; rule_results?: Array<{ rule: string; clause: string; status: string; message: string; needs_extra_module?: boolean }>;
 }
 
 export class BackendApiError extends Error {
@@ -50,3 +50,4 @@ export const backendApi = {
 export function toUserProfile(response: AuthResponse): import('../types').UserProfile {
   return { name: response.user.name, email: response.user.email, role: response.user.role, organization: undefined, clearanceLevel: response.user.role, token: response.access_token, lastLogin: new Date().toISOString() };
 }
+

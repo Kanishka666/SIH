@@ -182,14 +182,14 @@ export const OCRScannerModal: React.FC<OCRScannerModalProps> = ({
     });
 
     try {
-      if (!(source instanceof File)) {
-        throw new Error('The FastAPI upload endpoint requires an image file. Sample labels are local-only and were not sent.');
-      }
+      const uploadFile = source instanceof File
+        ? source
+        : new File([await (await fetch(source)).blob()], fileName || 'label.jpg', { type: 'image/jpeg' });
       setProgressState({ phase: 'UPLOADING', progress: 25, message: 'Uploading image to FastAPI...' });
-      const created = await backendApi.uploadScan(source);
+      const created = await backendApi.uploadScan(uploadFile);
       setProgressState({ phase: 'OCR_PROCESSING', progress: 60, message: `Backend scan ${created.scan_id} is processing...` });
       const scan = await backendApi.getScan(created.scan_id);
-      const result = backendScanToNormalizedResult(scan, source, fileName || source.name);
+      const result = backendScanToNormalizedResult(scan, uploadFile, fileName || uploadFile.name);
       const audit = backendScanToCompliance(scan);
 
       setOcrResult(result);
@@ -219,24 +219,31 @@ export const OCRScannerModal: React.FC<OCRScannerModalProps> = ({
       manufacturer: { key: 'manufacturer', label: 'Manufacturer', value: value('manufacturer'), confidence: 1, sourceText: value('manufacturer'), boundingBox: null, status: value('manufacturer') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
       mrp: { key: 'mrp', label: 'MRP', value: value('mrp'), confidence: 1, sourceText: value('mrp'), boundingBox: null, status: value('mrp') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
       netQuantity: { key: 'netQuantity', label: 'Net Quantity', value: value('net_quantity'), confidence: 1, sourceText: value('net_quantity'), boundingBox: null, status: value('net_quantity') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
-      batchNumber: { key: 'batchNumber', label: 'Batch Number', value: null, confidence: 0, sourceText: null, boundingBox: null, status: 'MISSING', source: 'OCR' },
-      manufacturingDate: { key: 'manufacturingDate', label: 'Manufacturing Date', value: null, confidence: 0, sourceText: null, boundingBox: null, status: 'MISSING', source: 'OCR' },
+      batchNumber: { key: 'batchNumber', label: 'Batch Number', value: value('batch_number'), confidence: 1, sourceText: value('batch_number'), boundingBox: null, status: value('batch_number') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
+      manufacturingDate: { key: 'manufacturingDate', label: 'Manufacturing Date', value: value('manufacturing_date'), confidence: 1, sourceText: value('manufacturing_date'), boundingBox: null, status: value('manufacturing_date') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
       expiryDate: { key: 'expiryDate', label: 'Expiry Date', value: value('expiry_date'), confidence: 1, sourceText: value('expiry_date'), boundingBox: null, status: value('expiry_date') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
       consumerCare: { key: 'consumerCare', label: 'Consumer Care', value: value('consumer_care'), confidence: 1, sourceText: value('consumer_care'), boundingBox: null, status: value('consumer_care') ? 'VERIFIED' : 'MISSING', source: 'OCR' },
-      countryOfOrigin: { key: 'countryOfOrigin', label: 'Country of Origin', value: null, confidence: 0, sourceText: null, boundingBox: null, status: 'MISSING', source: 'OCR' }
+      countryOfOrigin: { key: 'countryOfOrigin', label: 'Country of Origin', value: value('country_of_origin'), confidence: 1, sourceText: value('country_of_origin'), boundingBox: null, status: value('country_of_origin') ? 'VERIFIED' : 'MISSING', source: 'OCR' }
     } as any;
-    return { id: scan.scan_id, fileName, image: { src: URL.createObjectURL(source), width: 1, height: 1, aspectRatio: 1 }, rawText: '', ocrLines: [], fields, declarations: [], processing: { status: 'COMPLETE', durationMs: 0, engine: 'FastAPI backend scan endpoint' } };
+    return { id: scan.scan_id, fileName, image: { src: URL.createObjectURL(source), width: 1, height: 1, aspectRatio: 1 }, rawText: scan.raw_text || '', ocrLines: [], fields, declarations: [], processing: { status: 'COMPLETE', durationMs: 0, engine: 'FastAPI backend scan endpoint' } };
   };
 
-  const backendScanToCompliance = (scan: BackendScan): ComplianceResult => ({
+  const backendScanToCompliance = (scan: BackendScan): ComplianceResult => {
+    const checks = scan.rule_results || [];
+    const toCheck = (rule: typeof checks[number], status: 'PASS' | 'WARN' | 'FAIL', summary = rule.message) => ({ id: rule.rule, fieldKey: '', ruleName: rule.clause, legalActCitation: rule.rule, status, summary, recommendation: '' });
+    const violations = checks.filter((rule) => rule.status === 'VIOLATION').map((rule) => toCheck(rule, 'FAIL'));
+    const warnings = checks.filter((rule) => rule.status !== 'PASS' && rule.status !== 'VIOLATION').map((rule) => toCheck(rule, 'WARN', `${rule.status}: ${rule.message}`));
+    const passedChecks = checks.filter((rule) => rule.status === 'PASS').map((rule) => toCheck(rule, 'PASS'));
+    return {
     score: scan.compliance_score ?? 0,
     status: scan.overall_status === 'COMPLIANT' ? 'APPEARS COMPLIANT' : scan.overall_status === 'NON_COMPLIANT' ? 'POTENTIALLY NON-COMPLIANT' : 'REQUIRES REVIEW',
-    passedChecks: [],
-    warnings: [],
-    violations: (scan.violations || []).map((violation) => ({ id: violation.id, fieldKey: '', ruleName: violation.title, legalActCitation: violation.rule_number, status: 'FAIL' as const, summary: violation.reason, recommendation: violation.recommendation })),
+    passedChecks,
+    warnings,
+    violations,
     legalDisclaimer: 'Compliance data shown here is returned by the FastAPI backend. The current backend identifies its rules/results as mock/demo data.',
-    totalChecks: scan.violations?.length || 0
-  });
+    totalChecks: checks.length
+    };
+  };
 
   const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
@@ -851,3 +858,4 @@ export const OCRScannerModal: React.FC<OCRScannerModalProps> = ({
     </AnimatePresence>
   );
 };
+

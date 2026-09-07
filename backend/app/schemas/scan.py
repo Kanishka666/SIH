@@ -22,6 +22,9 @@ class ExtractedInformation(BaseModel):
     net_quantity: str
     expiry_date: str
     consumer_care: str
+    batch_number: Optional[str] = None
+    manufacturing_date: Optional[str] = None
+    country_of_origin: Optional[str] = None
 
 
 class Violation(BaseModel):
@@ -31,6 +34,14 @@ class Violation(BaseModel):
     reason: str
     severity: str  # "low" | "medium" | "high"
     recommendation: str
+
+
+class RuleResult(BaseModel):
+    rule: str
+    clause: str
+    status: str
+    message: str
+    needs_extra_module: bool = False
 
 
 class ScanResultResponse(BaseModel):
@@ -57,3 +68,7 @@ class ScanDetailResponse(BaseModel):
     extracted_information: Optional[ExtractedInformation] = None
     violations: Optional[List[Violation]] = None
     recommendations: Optional[List[str]] = None
+    rule_results: Optional[List[RuleResult]] = None
+    raw_text: Optional[str] = None
+
+

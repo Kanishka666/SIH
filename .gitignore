@@ -8,6 +8,8 @@ frontend/.env
 # Python
 backend/venv/
 backend/.venv/
+backend/ocr/venv/
+backend/ocr/processed_*
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -17,6 +19,8 @@ __pycache__/
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/.git-local-backup/
+frontend/*.zip
 
 # Runtime/generated files
 backend/uploads/*

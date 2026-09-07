@@ -23,10 +23,79 @@ SIH/
 ## Requirements
 
 - Python 3.11 or newer
-- Node.js and npm
-- PowerShell on Windows
+- Node.js 18 or newer and npm
+- Git
+- Windows users can use Git Bash, PowerShell, or Command Prompt. macOS/Linux users can use any POSIX shell.
 
-## Backend Setup
+## Setup
+
+Clone the repository and enter it:
+
+```bash
+git clone https://github.com/Kanishka666/SIH.git
+cd SIH
+```
+
+The project has three local processes:
+
+```text
+OCR service   http://127.0.0.1:8001
+Backend API   http://127.0.0.1:8000
+Frontend      http://localhost:5173
+```
+
+### OCR Service
+
+The OCR service uses PaddleOCR. Its Python environment is separate from the backend environment.
+
+Git Bash, macOS, or Linux:
+
+```bash
+cd backend/ocr
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python -m uvicorn api:app --host 127.0.0.1 --port 8001
+```
+
+Windows PowerShell:
+
+```powershell
+cd backend\ocr
+py -3 -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m uvicorn api:app --host 127.0.0.1 --port 8001
+```
+
+Windows Command Prompt:
+
+```bat
+cd backend\ocr
+py -3 -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+python -m uvicorn api:app --host 127.0.0.1 --port 8001
+```
+
+Keep this terminal running. The first OCR run may download or initialize PaddleOCR models.
+
+### Backend API
+
+Open a second terminal at the repository root.
+
+Git Bash, macOS, or Linux:
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+Windows PowerShell:
 
 ```powershell
 cd backend
@@ -34,10 +103,39 @@ py -3 -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 Copy-Item .env.example .env
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-The API runs at `http://127.0.0.1:8000`.
+Windows Command Prompt:
+
+```bat
+cd backend
+py -3 -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+copy .env.example .env
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+The backend reads `OCR_API_URL=http://127.0.0.1:8001` from `.env` and calls the OCR service for image scans.
+
+### Frontend
+
+Open a third terminal at the repository root:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at `http://localhost:5173` and uses `http://127.0.0.1:8000` by default. To override it, create `frontend/.env` with:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+For PowerShell use `New-Item frontend\.env` and edit the file; for Command Prompt use `type nul > frontend\.env` and edit the file.
 
 Documentation:
 
@@ -51,26 +149,7 @@ If PowerShell blocks activation, run this for the current terminal only:
 Set-ExecutionPolicy -Scope Process Bypass
 ```
 
-## Frontend Setup
-
-Open a second terminal:
-
-```powershell
-cd frontend
-npm install
-Copy-Item .env.example .env
-npm run dev
-```
-
-The frontend runs at `http://localhost:5173`.
-
-Frontend environment:
-
-```env
-VITE_API_BASE_URL=http://127.0.0.1:8000
-```
-
-Never place Supabase secret or service-role credentials in the frontend or any `VITE_*` variable.
+Never place Supabase secret or service-role credentials in the frontend or any `VITE_*` variable. Keep real credentials only in a local, untracked backend `.env` file.
 
 ## Authentication
 
@@ -154,11 +233,10 @@ The response includes structured data, rule results, overall status, pending che
 ## Current Limitations
 
 - Supabase PostgreSQL is not connected yet; current persistence uses in-memory storage.
-- The real OCR API is not available yet.
-- Image scans return an OCR-not-configured response until the OCR adapter and teammate API contract are provided.
-- Compliance can currently be tested directly with OCR text through the supplied pipeline.
+- OCR runs as a separate local PaddleOCR service and depends on image quality.
+- Image-dependent compliance checks remain `UNABLE_TO_VERIFY` until a computer-vision module is connected.
 - In-memory users, scans, products, and cases reset when the backend restarts.
-- Supabase table schema, RLS policies, and storage buckets must be integrated before production deployment.
+- The compliance rules are an implementation subset and should be legally reviewed before production use.
 
 ## Security
 
