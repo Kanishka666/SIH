@@ -1,0 +1,232 @@
+[
+  {
+    "structured_data": {
+      "mrp": "1150",
+      "mrp_tax_inclusive": true,
+      "net_quantity": "100",
+      "net_quantity_unit": "gm",
+      "packing_date": "Aug 2026",
+      "manufacturer_name": "Fresh Foods Pvt Ltd",
+      "generic_name": "Fresh Namkeen",
+      "consumer_care": "18001234567",
+      "raw_text": "MRP Rs 1150 incl all taxes\nNet Wt 100 GM\nPacked Aug 2026\nMfg by Fresh Foods Pvt Ltd\nCustomer care 18001234567\nFresh Namkeen"
+    },
+    "rule_results": [
+      {
+        "rule": "Rule 6(1)(a)",
+        "clause": "Manufacturer/Packer/Importer name & address",
+        "status": "PASS",
+        "message": "Detected: Fresh Foods Pvt Ltd",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(b)",
+        "clause": "Generic/common name of commodity",
+        "status": "PASS",
+        "message": "Detected: Fresh Namkeen",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(c)",
+        "clause": "Net quantity",
+        "status": "PASS",
+        "message": "Detected: 100 gm",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(d)",
+        "clause": "Month & Year of manufacture/packing",
+        "status": "PASS",
+        "message": "Detected: Aug 2026",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(e)",
+        "clause": "Retail Sale Price (MRP)",
+        "status": "PASS",
+        "message": "Detected: Rs 1150, tax-inclusive wording present.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(2)",
+        "clause": "Consumer care details",
+        "status": "PASS",
+        "message": "Detected: 18001234567",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(3)",
+        "clause": "Unauthorised sticker alteration",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based CV inspection; not yet available.",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 3",
+        "clause": "Applicability (quantity threshold)",
+        "status": "PASS",
+        "message": "100 gm (0.1 kg) within threshold.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 9(1)",
+        "clause": "Legible & contrasting declaration",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based legibility/contrast analysis (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 9(4)",
+        "clause": "Declaration language (Hindi/English)",
+        "status": "PASS",
+        "message": "Detected script: Latin/English",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 24",
+        "clause": "Wholesale package declarations",
+        "status": "NOT_APPLICABLE",
+        "message": "No wholesale-package indicator found.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 7",
+        "clause": "Numeral/letter height on display panel",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based measurement of numeral height (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 8",
+        "clause": "Declaration placement & spacing",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-layout analysis (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 23",
+        "clause": "Deceptive package assessment",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires physical/visual assessment of fill level (CV module).",
+        "needs_extra_module": true
+      }
+    ],
+    "overall_status": "COMPLIANT",
+    "pending_module_checks": 5
+  },
+  {
+    "structured_data": {
+      "mrp": "80",
+      "mrp_tax_inclusive": false,
+      "net_quantity": "1",
+      "net_quantity_unit": "kg",
+      "packing_date": "2026",
+      "manufacturer_name": "Abc Foods",
+      "generic_name": null,
+      "consumer_care": null,
+      "raw_text": "MRP Rs 80\nNet Wt 1 KG\nPacked 2026\nMfg by ABC Foods"
+    },
+    "rule_results": [
+      {
+        "rule": "Rule 6(1)(a)",
+        "clause": "Manufacturer/Packer/Importer name & address",
+        "status": "PASS",
+        "message": "Detected: Abc Foods",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(b)",
+        "clause": "Generic/common name of commodity",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Not detected in OCR text.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(c)",
+        "clause": "Net quantity",
+        "status": "PASS",
+        "message": "Detected: 1 kg",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(d)",
+        "clause": "Month & Year of manufacture/packing",
+        "status": "VIOLATION",
+        "message": "Only year found ('2026'); month also required.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(1)(e)",
+        "clause": "Retail Sale Price (MRP)",
+        "status": "VIOLATION",
+        "message": "MRP 'Rs 80' found but tax-inclusive wording missing.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(2)",
+        "clause": "Consumer care details",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Not detected in OCR text.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 6(3)",
+        "clause": "Unauthorised sticker alteration",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based CV inspection; not yet available.",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 3",
+        "clause": "Applicability (quantity threshold)",
+        "status": "PASS",
+        "message": "1 kg (1 kg) within threshold.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 9(1)",
+        "clause": "Legible & contrasting declaration",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based legibility/contrast analysis (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 9(4)",
+        "clause": "Declaration language (Hindi/English)",
+        "status": "PASS",
+        "message": "Detected script: Latin/English",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 24",
+        "clause": "Wholesale package declarations",
+        "status": "NOT_APPLICABLE",
+        "message": "No wholesale-package indicator found.",
+        "needs_extra_module": false
+      },
+      {
+        "rule": "Rule 7",
+        "clause": "Numeral/letter height on display panel",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-based measurement of numeral height (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 8",
+        "clause": "Declaration placement & spacing",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires image-layout analysis (CV module).",
+        "needs_extra_module": true
+      },
+      {
+        "rule": "Rule 23",
+        "clause": "Deceptive package assessment",
+        "status": "UNABLE_TO_VERIFY",
+        "message": "Requires physical/visual assessment of fill level (CV module).",
+        "needs_extra_module": true
+      }
+    ],
+    "overall_status": "NON_COMPLIANT",
+    "pending_module_checks": 5
+  }
+]

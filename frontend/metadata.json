@@ -1,0 +1,10 @@
+{
+  "name": "Remix LabelLens — Legal Metrology Compliance Scanner",
+  "description": "Next-generation legal metrology compliance scanner, adaptive rule engine, and OCR verification for modern retail packaging.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

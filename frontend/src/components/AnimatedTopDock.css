@@ -1,0 +1,523 @@
+/* Animated Top Dock Styles */
+
+.animated-top-dock-component {
+  position: relative;
+  width: 100%;
+  font-family: 'Space Mono', monospace;
+  user-select: none;
+}
+
+/* Global data-dock-item physics transform */
+[data-dock-item] {
+  transform-origin: center top;
+  transform: translate3d(0, var(--dock-drop, 0px), 0) scale(var(--dock-scale, 1));
+  will-change: transform;
+  position: relative;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Base Sable Variant */
+.animated-top-dock__nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(18, 18, 18, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 15px rgba(250, 204, 21, 0.05);
+}
+
+.animated-top-dock__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.65);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.animated-top-dock__item:hover,
+.animated-top-dock__item[aria-pressed="true"] {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(250, 204, 21, 0.4);
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.15);
+}
+
+.animated-top-dock__logo {
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.animated-top-dock__icon svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.animated-top-dock-component__caption {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin-top: 8px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ==========================================================================
+   MODERN VARIANT (Full Enterprise Header Layout)
+   ========================================================================== */
+.atd-modern {
+  position: relative;
+  background: transparent;
+}
+
+.atd-modern__aurora {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 90px;
+  background: radial-gradient(ellipse at center, rgba(250, 204, 21, 0.12) 0%, rgba(250, 204, 21, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(25px);
+}
+
+.atd-modern__bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 64px;
+  padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+  .atd-modern__bar {
+    padding: 0 24px;
+  }
+}
+
+.atd-modern__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+}
+
+.atd-modern__mark {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atd-modern__mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.atd-modern__word {
+  text-transform: uppercase;
+  font-family: 'Space Mono', monospace;
+}
+
+.atd-modern__dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), 0 0 12px rgba(250, 204, 21, 0.08);
+}
+
+.atd-modern__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+}
+
+.atd-modern__item:hover,
+.atd-modern__item[aria-pressed="true"] {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(250, 204, 21, 0.35);
+  box-shadow: 0 0 14px rgba(250, 204, 21, 0.12);
+}
+
+.atd-modern__icon svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.atd-modern__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.atd-modern__ghost {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.atd-modern__ghost:hover {
+  color: #ffffff;
+}
+
+.atd-modern__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 9999px;
+  background: #facc15;
+  color: #000000;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.3);
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.atd-modern__cta:hover {
+  background: #fde047;
+}
+
+.atd-modern__cta:active {
+  transform: scale(0.96);
+}
+
+.atd-modern__cta svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
+
+/* ==========================================================================
+   RETRO VARIANT (8-Bit Phosphor Dither / OS Terminal Aesthetic)
+   ========================================================================== */
+.atd-retro {
+  position: relative;
+  background: #090909;
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  border-radius: 14px;
+  padding: 6px 12px;
+  overflow: visible;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.1), inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+.atd-retro__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.75;
+  z-index: 0;
+}
+
+.atd-retro__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.atd-retro__bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.atd-retro__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #facc15;
+}
+
+.atd-retro__badge {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.atd-retro__badge svg {
+  width: 14px;
+  height: 14px;
+  fill: #facc15;
+}
+
+.atd-retro__dock {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  padding: 3px;
+  border-radius: 6px;
+}
+
+.atd-retro__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(250, 204, 21, 0.7);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.atd-retro__item:hover,
+.atd-retro__item[aria-pressed="true"] {
+  color: #000000;
+  background: #facc15;
+  border-color: #facc15;
+  box-shadow: 0 0 10px rgba(250, 204, 21, 0.6);
+}
+
+.atd-retro__icon svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.atd-retro__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background: #facc15;
+  color: #000000;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  border: 1px solid #facc15;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.atd-retro__readout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: rgba(250, 204, 21, 0.5);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   GLASS VARIANT (Frosted Glass & Dynamic Dispersion Field)
+   ========================================================================== */
+.atd-glass {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 8px 16px;
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  overflow: visible;
+}
+
+.atd-glass__field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.atd-glass__rail {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.atd-glass__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+}
+
+.atd-glass__mark {
+  width: 24px;
+  height: 24px;
+}
+
+.atd-glass__mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+.atd-glass__word {
+  text-transform: uppercase;
+}
+
+.atd-glass__dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 4px 6px;
+}
+
+.atd-glass__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+.atd-glass__item:hover,
+.atd-glass__item[aria-pressed="true"] {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 0 12px rgba(250, 204, 21, 0.15);
+}
+
+.atd-glass__icon svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+.atd-glass__hairline {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.atd-glass__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(250, 204, 21, 0.18);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  color: #facc15;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.atd-glass__cta:hover {
+  background: #facc15;
+  color: #000000;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.35);
+}
+
+.atd-glass__cta svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+}
